@@ -1,0 +1,866 @@
+/* =========================================================
+   Chleb i Wino — Restauracja, Solec-Zdrój
+   Arkusz stylów. Jeden plik dla całej witryny.
+   ========================================================= */
+
+/* ---------- 1. Zmienne / paleta ---------- */
+:root {
+  --bordo:        #5c1524;
+  --bordo-ciemny: #3d0d18;
+  --bordo-jasny:  #7d2334;
+  --zloto:        #b08d46;
+  --krem:         #f7f1e6;
+  --krem-ciemny:  #efe5d4;
+  --papier:       #fdfaf5;
+  --tekst:        #2c2018;
+  --tekst-mnie:   #6b5c50;
+  --linia:        #ddd0bc;
+
+  --serif: "Cormorant Garamond", "EB Garamond", Georgia, "Times New Roman", serif;
+  --sans:  "Jost", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+
+  --max: 1160px;
+  --gap: clamp(1.25rem, 4vw, 2.5rem);
+  --cien: 0 12px 40px -18px rgba(60, 20, 25, .35);
+}
+
+/* ---------- 2. Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  /* miejsce na sticky header przy skokach do kotwic */
+  scroll-padding-top: 96px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--papier);
+  color: var(--tekst);
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.7;
+}
+
+img { max-width: 100%; display: block; height: auto; }
+a   { color: var(--bordo); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  font-weight: 600;
+  line-height: 1.15;
+  margin: 0 0 .5em;
+  color: var(--bordo-ciemny);
+}
+
+h1 { font-size: clamp(2.5rem, 6vw, 4.25rem); }
+h2 { font-size: clamp(1.9rem, 4vw, 2.9rem); }
+h3 { font-size: clamp(1.25rem, 2.4vw, 1.6rem); }
+
+p { margin: 0 0 1.1em; }
+
+/* ---------- 3. Elementy pomocnicze ---------- */
+.wrap {
+  width: min(100% - 2.5rem, var(--max));
+  margin-inline: auto;
+}
+
+.waski { width: min(100% - 2.5rem, 760px); margin-inline: auto; }
+
+.sekcja { padding: clamp(3.5rem, 9vw, 7rem) 0; }
+.sekcja--krem { background: var(--krem); }
+.sekcja--bordo { background: var(--bordo-ciemny); color: var(--krem); }
+.sekcja--bordo h2, .sekcja--bordo h3 { color: var(--krem); }
+
+.nadtytul {
+  font-family: var(--sans);
+  font-size: .78rem;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--zloto);
+  margin: 0 0 .9rem;
+  font-weight: 500;
+}
+
+.srodek { text-align: center; }
+.olowek { color: var(--tekst-mnie); }
+
+/* ozdobny separator z winogronem/kropką */
+.ozdoba {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1.5rem 0 2.5rem;
+}
+.ozdoba::before, .ozdoba::after {
+  content: "";
+  height: 1px;
+  width: min(90px, 18vw);
+  background: linear-gradient(to right, transparent, var(--zloto), transparent);
+}
+.ozdoba span { color: var(--zloto); font-size: .8rem; letter-spacing: .2em; }
+
+/* przyciski */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  padding: .95rem 2rem;
+  border: 1px solid var(--bordo);
+  border-radius: 2px;
+  background: var(--bordo);
+  color: var(--krem);
+  font-family: var(--sans);
+  font-size: .82rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background .25s ease, color .25s ease, transform .25s ease;
+}
+.btn:hover { background: var(--bordo-ciemny); border-color: var(--bordo-ciemny); transform: translateY(-2px); }
+
+.btn--kontur { background: transparent; color: var(--bordo); }
+.btn--kontur:hover { background: var(--bordo); color: var(--krem); }
+
+.btn--jasny { background: transparent; border-color: var(--krem); color: var(--krem); }
+.btn--jasny:hover { background: var(--krem); color: var(--bordo-ciemny); }
+
+.btn-grupa { display: flex; flex-wrap: wrap; gap: .9rem; }
+.srodek .btn-grupa { justify-content: center; }
+
+/* ---------- 4. Nagłówek / nawigacja ---------- */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(253, 250, 245, .93);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--linia);
+  transition: box-shadow .3s ease;
+}
+.header.przewiniety { box-shadow: 0 6px 24px -18px rgba(60,20,25,.6); }
+
+.header__in {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 76px;
+  padding: .5rem 0;
+}
+/* Kolejność: logo | nawigacja | język | hamburger.
+   Na telefonie nawigacja jest pozycjonowana na stałe (wypada z układu),
+   więc zostaje: logo | język | hamburger. */
+.header__in > .logo { margin-right: auto; order: 1; }
+.header__in > .nav { order: 2; }
+.header__in > .jezyk { order: 3; }
+.header__in > .hamburger { order: 4; }
+
+/* przełącznik języka */
+.jezyk {
+  display: flex;
+  flex: none;
+  border: 1px solid var(--linia);
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--papier);
+}
+.jezyk a {
+  padding: .4rem .75rem;
+  font-size: .72rem;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-decoration: none;
+  color: var(--tekst-mnie);
+  line-height: 1.2;
+  transition: background .2s ease, color .2s ease;
+}
+.jezyk a:hover { color: var(--bordo); background: var(--krem); }
+.jezyk a[aria-current="true"] { background: var(--bordo); color: var(--krem); }
+.jezyk a[aria-current="true"]:hover { background: var(--bordo-ciemny); color: var(--krem); }
+
+.logo { display: flex; align-items: center; gap: .7rem; text-decoration: none; }
+
+/* Logo w okrągłej pieczęci — tak jak na wizytówce Google i Facebooku.
+   Plik źródłowy ma szeroki pusty margines, więc powiększamy go o 34%,
+   żeby znak z napisem ładnie wypełnił koło. */
+.znak {
+  flex: none;
+  display: block;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  background: var(--krem);
+}
+.znak img {
+  position: absolute;
+  width: 134%;
+  height: 134%;
+  max-width: none;
+  left: -17%;
+  top: -17%;
+}
+.znak--duzy { width: 88px; height: 88px; }
+.logo__txt { font-family: var(--serif); line-height: 1.05; }
+.logo__txt strong {
+  display: block;
+  font-size: 1.22rem;
+  font-weight: 600;
+  letter-spacing: .06em;
+  color: var(--bordo-ciemny);
+  text-transform: uppercase;
+}
+.logo__txt small {
+  font-family: var(--sans);
+  font-size: .58rem;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--zloto);
+}
+
+.nav ul {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 2.5vw, 2rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.nav a {
+  font-size: .78rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--tekst);
+  padding: .4rem 0;
+  position: relative;
+}
+.nav a::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 0; height: 1px;
+  background: var(--zloto);
+  transition: width .28s ease;
+}
+.nav a:hover::after, .nav a[aria-current="page"]::after { width: 100%; }
+.nav a[aria-current="page"] { color: var(--bordo); }
+
+.nav__tel {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  border: 1px solid var(--bordo);
+  border-radius: 2px;
+  padding: .55rem 1.1rem !important;
+  color: var(--bordo) !important;
+}
+.nav__tel::after { display: none; }
+.nav__tel:hover { background: var(--bordo); color: var(--krem) !important; }
+
+/* hamburger */
+.hamburger {
+  display: none;
+  width: 44px; height: 44px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  padding: 10px;
+}
+.hamburger span {
+  display: block;
+  height: 1.5px;
+  background: var(--bordo-ciemny);
+  margin: 5px 0;
+  transition: transform .3s ease, opacity .25s ease;
+}
+.hamburger[aria-expanded="true"] span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.hamburger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* Na wąskich ekranach logo musi zmieścić się obok przełącznika języka,
+   inaczej napis się łamie i nagłówek rośnie. */
+@media (max-width: 560px) {
+  .znak { width: 44px; height: 44px; }
+  .logo { gap: .55rem; }
+  .logo__txt strong { font-size: 1.05rem; }
+  .logo__txt small { display: none; }
+}
+
+@media (max-width: 900px) {
+  .hamburger { display: block; }
+  .nav {
+    position: fixed;
+    inset: var(--h-naglowek, 76px) 0 auto 0;
+    background: var(--papier);
+    border-bottom: 1px solid var(--linia);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .35s ease;
+  }
+  .nav.otwarte { max-height: 70vh; overflow-y: auto; }
+  .nav ul { flex-direction: column; align-items: stretch; gap: 0; padding: .5rem 1.25rem 1.5rem; }
+  .nav li { border-bottom: 1px solid var(--linia); }
+  .nav li:last-child { border: 0; padding-top: 1rem; }
+  .nav a { display: block; padding: 1rem .25rem; font-size: .9rem; }
+  .nav__tel { justify-content: center; }
+}
+
+/* ---------- 5. Hero ---------- */
+.hero {
+  position: relative;
+  min-height: clamp(520px, 82vh, 780px);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: var(--krem);
+  overflow: hidden;
+}
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  background: url("../img/wnetrze.jpg") center 55% / cover no-repeat;
+  transform: scale(1.05);
+}
+.hero__bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(40,10,16,.72) 0%, rgba(40,10,16,.5) 45%, rgba(40,10,16,.82) 100%);
+}
+.hero__in { position: relative; padding: 7rem 1.25rem 5rem; }
+.hero h1 { color: var(--krem); margin-bottom: .35em; text-shadow: 0 2px 30px rgba(0,0,0,.35); }
+.hero__lead {
+  font-family: var(--serif);
+  font-size: clamp(1.15rem, 2.4vw, 1.5rem);
+  font-style: italic;
+  max-width: 34ch;
+  margin: 0 auto 2.2rem;
+  color: #f1e6d6;
+}
+.hero .nadtytul { color: #e0bd7e; }
+
+.hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .6rem 1.5rem;
+  margin-top: 2.6rem;
+  font-size: .8rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #e5d8c4;
+}
+.hero__meta span { display: inline-flex; align-items: center; gap: .45rem; }
+
+/* pasek z oceną pod hero */
+.pasek-ocena {
+  background: var(--bordo-ciemny);
+  color: var(--krem);
+  padding: 1.1rem 0;
+  font-size: .85rem;
+  letter-spacing: .1em;
+}
+.pasek-ocena__in {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem 2.2rem;
+  text-align: center;
+}
+.gwiazdki { color: #e0bd7e; letter-spacing: .18em; }
+
+/* ---------- 6. Siatki treści ---------- */
+.duet {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: center;
+}
+@media (max-width: 860px) { .duet { grid-template-columns: 1fr; } }
+
+.duet__foto {
+  position: relative;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: var(--cien);
+}
+.duet__foto img { width: 100%; }
+.duet__foto::after {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 1px solid rgba(247,241,230,.35);
+  pointer-events: none;
+}
+
+.karty {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+.karta {
+  background: var(--papier);
+  border: 1px solid var(--linia);
+  padding: 2.2rem 1.75rem;
+  text-align: center;
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+.karta:hover { transform: translateY(-4px); box-shadow: var(--cien); }
+.karta__ikona {
+  font-size: 1.7rem;
+  color: var(--zloto);
+  margin-bottom: .6rem;
+  line-height: 1;
+}
+.karta h3 { margin-bottom: .4rem; }
+.karta p { margin: 0; font-size: .96rem; color: var(--tekst-mnie); }
+
+/* ---------- 7. Menu ---------- */
+/* na stronie menu kotwice muszą minąć dwa przyklejone paski */
+html:has(.menu-nawigacja) {
+  scroll-padding-top: calc(var(--h-naglowek, 76px) + 74px);
+}
+
+.menu-nawigacja {
+  position: sticky;
+  top: var(--h-naglowek, 76px);
+  z-index: 50;
+  background: rgba(247, 241, 230, .96);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--linia);
+  padding: .75rem 0;
+}
+.menu-nawigacja__in {
+  display: flex;
+  gap: .5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+.menu-nawigacja__in::-webkit-scrollbar { display: none; }
+.menu-nawigacja a {
+  flex: 0 0 auto;
+  padding: .5rem 1.05rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: .75rem;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--tekst-mnie);
+  white-space: nowrap;
+  transition: all .22s ease;
+}
+.menu-nawigacja a:hover { color: var(--bordo); border-color: var(--linia); }
+.menu-nawigacja a.aktywny { background: var(--bordo); border-color: var(--bordo); color: var(--krem); }
+
+.menu-blok { padding: clamp(2.5rem, 6vw, 4rem) 0 0; }
+.menu-blok__naglowek { text-align: center; margin-bottom: 2.5rem; }
+.menu-blok__naglowek p { color: var(--tekst-mnie); font-style: italic; font-family: var(--serif); font-size: 1.1rem; }
+
+.dania { display: grid; gap: 1.6rem; }
+@media (min-width: 900px) { .dania--dwie { grid-template-columns: 1fr 1fr; column-gap: 3.5rem; } }
+
+.danie {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: .25rem .9rem;
+  align-items: baseline;
+  padding-bottom: 1.4rem;
+  border-bottom: 1px dashed var(--linia);
+}
+.danie:last-child { border-bottom: 0; }
+.danie__nazwa {
+  font-family: var(--serif);
+  font-size: 1.24rem;
+  font-weight: 600;
+  color: var(--bordo-ciemny);
+  margin: 0;
+  letter-spacing: .01em;
+}
+.danie__cena {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--bordo);
+  white-space: nowrap;
+}
+.danie__opis {
+  grid-column: 1 / -1;
+  margin: .15rem 0 0;
+  font-size: .95rem;
+  color: var(--tekst-mnie);
+  font-style: italic;
+  line-height: 1.55;
+}
+.danie__tag {
+  display: inline-block;
+  margin-left: .5rem;
+  padding: .1rem .5rem;
+  border: 1px solid var(--zloto);
+  border-radius: 999px;
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: .62rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--zloto);
+  vertical-align: middle;
+}
+
+/* wyróżniony blok — chleb */
+.wyroznik {
+  background: var(--krem);
+  border: 1px solid var(--linia);
+  border-left: 3px solid var(--bordo);
+  padding: 2rem 1.9rem;
+  margin-bottom: 2.5rem;
+}
+.wyroznik h3 { margin-bottom: .3rem; }
+.wyroznik p { margin-bottom: .8rem; color: var(--tekst-mnie); }
+.wyroznik ul { margin: 0; padding-left: 1.1rem; }
+.wyroznik li { margin-bottom: .25rem; }
+
+/* lista napojów — prostsza forma */
+.napoje { display: grid; gap: .85rem; }
+@media (min-width: 800px) { .napoje--dwie { grid-template-columns: 1fr 1fr; column-gap: 3.5rem; } }
+.napoj {
+  display: flex;
+  align-items: baseline;
+  gap: .75rem;
+  padding-bottom: .6rem;
+  border-bottom: 1px dashed var(--linia);
+}
+.napoj__nazwa { font-family: var(--serif); font-size: 1.08rem; color: var(--bordo-ciemny); }
+.napoj__nazwa em { font-family: var(--sans); font-size: .78rem; font-style: normal; color: var(--tekst-mnie); letter-spacing: .04em; }
+.napoj__kropki { flex: 1; border-bottom: 1px dotted var(--linia); transform: translateY(-4px); }
+.napoj__cena { font-family: var(--serif); font-weight: 600; color: var(--bordo); white-space: nowrap; }
+
+.podgrupa {
+  font-family: var(--sans);
+  font-size: .72rem;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--zloto);
+  margin: 2.2rem 0 1.1rem;
+  padding-bottom: .4rem;
+  border-bottom: 1px solid var(--linia);
+}
+.podgrupa:first-child { margin-top: 0; }
+
+.uwaga {
+  font-size: .85rem;
+  color: var(--tekst-mnie);
+  font-style: italic;
+  text-align: center;
+  margin-top: 3rem;
+}
+
+/* Zastrzeżenie o cenach — widoczne, ale nienachalne. */
+.zastrzezenie {
+  display: flex;
+  align-items: flex-start;
+  gap: .7rem;
+  max-width: 640px;
+  margin: 2rem auto 0;
+  padding: .9rem 1.2rem;
+  border: 1px solid var(--linia);
+  border-left: 3px solid var(--zloto);
+  background: var(--papier);
+  text-align: left;
+  font-size: .88rem;
+  line-height: 1.55;
+  color: var(--tekst-mnie);
+}
+.zastrzezenie .gwiazdka {
+  flex: none;
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--zloto);
+  transform: translateY(2px);
+}
+.zastrzezenie p { margin: 0; }
+
+/* wersja skrócona, jednoliniowa — pod cenami na stronie głównej */
+.zastrzezenie--drobne {
+  display: block;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  margin-top: 1.6rem;
+  text-align: center;
+  font-size: .82rem;
+  font-style: italic;
+}
+.zastrzezenie--drobne .gwiazdka { display: inline; font-size: 1rem; transform: none; }
+/* na ciemnym tle trzeba rozjaśnić, inaczej napis znika */
+.sekcja--bordo .zastrzezenie--drobne { color: #c2b0a0; }
+
+/* ---------- 8. Opinie ---------- */
+.opinie {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+.opinia {
+  background: rgba(247,241,230,.06);
+  border: 1px solid rgba(224,189,126,.28);
+  padding: 2rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+}
+.sekcja--krem .opinia { background: var(--papier); border-color: var(--linia); }
+.opinia__gwiazdki { color: #e0bd7e; letter-spacing: .16em; margin-bottom: .9rem; font-size: .95rem; }
+.opinia__tekst {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-style: italic;
+  line-height: 1.6;
+  margin-bottom: 1.2rem;
+  flex: 1;
+}
+.opinia__autor {
+  font-size: .72rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--zloto);
+  margin: 0;
+}
+
+/* ---------- 9. Galeria ---------- */
+.galeria {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+.galeria figure { margin: 0; overflow: hidden; border: 1px solid var(--linia); background: var(--krem); }
+.galeria img { width: 100%; transition: transform .5s ease; }
+.galeria figure:hover img { transform: scale(1.04); }
+
+/* karta menu jako obrazki (skan) */
+.skany { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; }
+.skany a { border: 1px solid var(--linia); background: #fff; display: block; overflow: hidden; }
+.skany img { transition: transform .4s ease; }
+.skany a:hover img { transform: scale(1.03); }
+
+/* ---------- 10. Kontakt ---------- */
+.kontakt-siatka {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 5vw, 4rem);
+}
+@media (max-width: 860px) { .kontakt-siatka { grid-template-columns: 1fr; } }
+
+.dane { list-style: none; margin: 0; padding: 0; }
+.dane li {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: .9rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--linia);
+}
+.dane li:last-child { border-bottom: 0; }
+.dane .ikona { color: var(--zloto); font-size: 1.15rem; line-height: 1.5; }
+.dane strong {
+  display: block;
+  font-family: var(--sans);
+  font-size: .7rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--tekst-mnie);
+  font-weight: 500;
+  margin-bottom: .15rem;
+}
+.dane a { text-decoration: none; }
+.dane a:hover { text-decoration: underline; }
+
+.godziny { width: 100%; border-collapse: collapse; font-size: .98rem; }
+.godziny td { padding: .6rem 0; border-bottom: 1px solid var(--linia); }
+.godziny td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+.godziny tr:last-child td { border-bottom: 0; }
+.godziny tr.dzis td { color: var(--bordo); font-weight: 600; }
+
+.mapa {
+  border: 1px solid var(--linia);
+  overflow: hidden;
+  min-height: 340px;
+  background: var(--krem);
+}
+.mapa iframe { width: 100%; height: 100%; min-height: 340px; border: 0; display: block; }
+
+/* CTA rezerwacja */
+.cta-rezerwacja { text-align: center; }
+.cta-rezerwacja .telefon {
+  display: inline-block;
+  font-family: var(--serif);
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 600;
+  letter-spacing: .04em;
+  color: var(--krem);
+  text-decoration: none;
+  margin: .4rem 0 1.6rem;
+}
+.cta-rezerwacja .telefon:hover { color: #e0bd7e; }
+
+/* ---------- 11. Stopka ---------- */
+.footer {
+  background: var(--bordo-ciemny);
+  color: #d9c9b6;
+  padding: clamp(3rem, 7vw, 4.5rem) 0 0;
+  font-size: .94rem;
+}
+.footer h4 {
+  font-family: var(--sans);
+  font-size: .72rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: #e0bd7e;
+  margin: 0 0 1.1rem;
+}
+.footer a { color: #d9c9b6; text-decoration: none; }
+.footer a:hover { color: #fff; text-decoration: underline; }
+.footer__siatka {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: clamp(2rem, 5vw, 3.5rem);
+  padding-bottom: 3rem;
+}
+@media (max-width: 780px) { .footer__siatka { grid-template-columns: 1fr; gap: 2.5rem; } }
+.footer ul { list-style: none; margin: 0; padding: 0; }
+.footer li { margin-bottom: .55rem; }
+.footer__logo .znak { margin-bottom: 1.1rem; }
+.footer__spolecznosci { display: flex; gap: .75rem; margin-top: 1.2rem; }
+.footer__spolecznosci a {
+  width: 40px; height: 40px;
+  display: grid; place-items: center;
+  border: 1px solid rgba(224,189,126,.4);
+  border-radius: 50%;
+  transition: background .25s ease, color .25s ease;
+}
+.footer__spolecznosci a:hover { background: #e0bd7e; color: var(--bordo-ciemny); }
+.footer__spolecznosci svg { width: 18px; height: 18px; fill: currentColor; }
+
+.footer__dol {
+  border-top: 1px solid rgba(224,189,126,.22);
+  padding: 1.5rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: .75rem;
+  font-size: .82rem;
+  color: #b09e8c;
+}
+
+/* ---------- 12. Pasek mobilny (telefon zawsze pod ręką) ---------- */
+.pasek-mobilny {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 90;
+  display: none;
+  background: var(--bordo);
+  box-shadow: 0 -6px 24px -14px rgba(0,0,0,.5);
+}
+.pasek-mobilny a {
+  flex: 1;
+  padding: .95rem .5rem;
+  text-align: center;
+  color: var(--krem);
+  text-decoration: none;
+  font-size: .74rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  border-right: 1px solid rgba(247,241,230,.2);
+}
+.pasek-mobilny a:last-child { border-right: 0; }
+@media (max-width: 700px) {
+  .pasek-mobilny { display: flex; }
+  body { padding-bottom: 52px; }
+}
+
+/* ---------- 12b. Okno z numerem telefonu (komputery) ----------
+   Na telefonie link tel: otwiera dzwonienie. Na komputerze zwykle nie robi nic,
+   więc zamiast tego pokazujemy numer do przepisania lub skopiowania. */
+.okno-tel {
+  border: 0;
+  padding: 0;
+  width: min(92vw, 420px);
+  background: var(--papier);
+  color: var(--tekst);
+  box-shadow: 0 30px 80px -30px rgba(40, 10, 16, .6);
+  border-radius: 3px;
+}
+.okno-tel::backdrop { background: rgba(40, 10, 16, .55); backdrop-filter: blur(3px); }
+
+.okno-tel__in { padding: 2.5rem 2rem 2rem; text-align: center; position: relative; }
+.okno-tel h2 { font-size: 1.7rem; margin-bottom: .3rem; }
+.okno-tel p { color: var(--tekst-mnie); font-size: .95rem; margin-bottom: 1.4rem; }
+
+.okno-tel__numer {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(2rem, 7vw, 2.6rem);
+  font-weight: 600;
+  letter-spacing: .04em;
+  color: var(--bordo);
+  text-decoration: none;
+  margin-bottom: 1.6rem;
+}
+
+.okno-tel__zamknij {
+  position: absolute;
+  top: .5rem;
+  right: .5rem;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  background: transparent;
+  color: var(--tekst-mnie);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 50%;
+}
+.okno-tel__zamknij:hover { background: var(--krem); color: var(--bordo); }
+
+/* ---------- 13. Animacje wejścia ----------
+   Ukrywamy sekcje tylko wtedy, gdy JavaScript faktycznie działa
+   (klasa .js dodawana jest w <head>). Bez JS treść jest po prostu widoczna. */
+.js .wjazd { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+.js .wjazd.widoczne { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .js .wjazd { opacity: 1; transform: none; transition: none; }
+  * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+/* ---------- 14. Dostępność ---------- */
+.pomin {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--bordo);
+  color: #fff;
+  padding: .75rem 1.25rem;
+  z-index: 999;
+}
+.pomin:focus { left: 1rem; top: 1rem; }
+
+:focus-visible { outline: 2px solid var(--zloto); outline-offset: 3px; }
+
+/* ---------- 15. Druk ---------- */
+@media print {
+  .header, .footer, .pasek-mobilny, .menu-nawigacja, .hero__bg { display: none !important; }
+  body { background: #fff; font-size: 11pt; }
+  .sekcja { padding: 1rem 0; }
+  .danie { break-inside: avoid; }
+}
